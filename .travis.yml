@@ -1,0 +1,29 @@
+language: generic
+
+# apply root access and permission 
+sudo: required 
+
+# services dependencies 
+services: 
+  - docker 
+
+# run test suite before actual build 
+before-install: 
+  - docker build -t honglin/react-test -f ./client/Dockerfile.dev ./client 
+ 
+scripts:
+  - docker run -e CI=true honglin/react-test npm test -- --coverage
+
+# build production image for all services
+after-success: 
+  - docker build -t honglin/multi-client ./client
+  - docker build -t honglin/multi-nginx ./nginx
+  - docker build -t honglin/multi-server ./server
+  - docker build -t honglin/multi-worker ./worker
+  # log in to the Docker CLI (retrieve docker password from environment variable and exit to stdin as an input of the next command after pipe, which is served as an Enter key)
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # take those images and push them to docker hub 
+  - docker push honglin/multi-client
+  - docker push honglin/multi-nginx
+  - docker push honglin/multi-server
+  - docker push honglin/multi-worker
