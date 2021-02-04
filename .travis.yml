@@ -9,21 +9,21 @@ services:
 
 # run test suite before actual build 
 before_install: 
-  - docker build -t honglin/react-test -f ./client/Dockerfile.dev ./client 
+  - docker build -t hlcphantom/react-test -f ./client/Dockerfile.dev ./client 
  
 script:
-  - docker run -e CI=true honglin/react-test npm test -- --coverage
+  - docker run -e CI=true hlcphantom/react-test npm test -- --coverage
 
 # build production image for all services
 after_success: 
-  - docker build -t honglin/multi-client ./client
-  - docker build -t honglin/multi-nginx ./nginx
-  - docker build -t honglin/multi-server ./server
-  - docker build -t honglin/multi-worker ./worker
+  - docker build -t hlcphantom/multi-client ./client
+  - docker build -t hlcphantom/multi-nginx ./nginx
+  - docker build -t hlcphantom/multi-server ./server
+  - docker build -t hlcphantom/multi-worker ./worker
   # log in to the Docker CLI (retrieve docker password from environment variable and exit to stdin as an input of the next command after pipe, which is served as an Enter key)
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # take those images and push them to docker hub 
-  - docker push honglin/multi-client
-  - docker push honglin/multi-nginx
-  - docker push honglin/multi-server
-  - docker push honglin/multi-worker
+  - docker push hlcphantom/multi-client
+  - docker push hlcphantom/multi-nginx
+  - docker push hlcphantom/multi-server
+  - docker push hlcphantom/multi-worker

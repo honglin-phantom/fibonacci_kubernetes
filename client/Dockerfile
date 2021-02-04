@@ -6,7 +6,6 @@ RUN npm install
 COPY . . 
 RUN npm run build 
 
-# next build
 FROM nginx
 EXPOSE 3000
 # make a copy of config file in local machine to remote container
