@@ -26,4 +26,4 @@ after_success:
   - docker push hlcphantom/multi-client
   - docker push hlcphantom/multi-nginx
   - docker push hlcphantom/multi-server
-  - docker push hlcphantom/multi-worker
+  - docker push hlcphantom/multi-worker 
