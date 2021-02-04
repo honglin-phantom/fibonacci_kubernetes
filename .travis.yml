@@ -8,14 +8,14 @@ services:
   - docker 
 
 # run test suite before actual build 
-before-install: 
+before_install: 
   - docker build -t honglin/react-test -f ./client/Dockerfile.dev ./client 
  
-scripts:
+script:
   - docker run -e CI=true honglin/react-test npm test -- --coverage
 
 # build production image for all services
-after-success: 
+after_success: 
   - docker build -t honglin/multi-client ./client
   - docker build -t honglin/multi-nginx ./nginx
   - docker build -t honglin/multi-server ./server
