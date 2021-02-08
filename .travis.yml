@@ -27,3 +27,16 @@ after_success:
   - docker push hlcphantom/multi-nginx
   - docker push hlcphantom/multi-server
   - docker push hlcphantom/multi-worker 
+
+# deploy script to deploy production asset to AWS BeanStalk 
+deploy:
+  provider: elasticbeanstalk
+  region: us-west-1
+  app: multi-docker
+  evn: MultiDocker-env
+  bucket-name: elasticbeanstalk-us-west-1-306476627547 # where travis zip projects and dashes to S3 bucket (Amazon S3 service)
+  bucket-path: docker-multi
+  on:
+    branch: master
+  access-key-id: $AWS_ACCESS_KEY
+  secret-access-key: $AWS_SECRET_KEY
