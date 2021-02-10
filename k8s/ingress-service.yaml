@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress 
+metadata:
+  name: ingress-service
+  annotations: 
+    # create ingress controller based on nginx project
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+    # specify how copy of the nginx behaves (rewrite rule for incoming request: /api becomes / when finally routed to the server)
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec: 
+  rules:
+    - http: 
+        paths: 
+          # specify types of request 
+          - path: /?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: client-cluster-ip-service
+                port: 
+                  number: 3000
+          - path: /api/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: server-cluster-ip-service
+                port: 
+                  number: 5000

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  # prevent multiple replicas from accessing the same local volume file system
+  replicas: 1
+  selector:
+    matchLabels: 
+      component: postgres
+  template:
+    metadata:
+      labels:
+        component: postgres
+    spec:
+      volumes: 
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: database-persistent-volume-claim
+      containers:
+        - name: postgres
+          image: postgres
+          ports:
+            - containerPort: 5432
+          # determine which volume this pod is going to use
+          volumeMounts: 
+            - name: postgres-storage
+              # where in the container the storage is available
+              mountPath: /var/lib/postgresql/data
+              # folder in persistent volume that backups postgres data in above mouthPath (specific for postgres)
+              subPath: postgres
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom: 
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD
+
+  
