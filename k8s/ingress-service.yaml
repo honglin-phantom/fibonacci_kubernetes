@@ -8,7 +8,16 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: 'true'
     # specify how copy of the nginx behaves (rewrite rule for incoming request: /api becomes / when finally routed to the server)
     nginx.ingress.kubernetes.io/rewrite-target: /$1
+    # specify certificate and issuer nginx should use
+    certmanager.io/cluster-issuer: 'letsencrypt-prod'
+    # force users to user security version of http 
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
 spec: 
+  tls:
+    - hosts: 
+      - k8s-multi.com
+      - www.k8s-multi.com
+      secretName: k8s-multi-com
   rules:
     - http: 
         paths: 
