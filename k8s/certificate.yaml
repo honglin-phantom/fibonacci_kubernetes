@@ -1,0 +1,22 @@
+# store obtained certificate inside a secret 
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata: 
+  name: k8s-multi-com-tls
+spec:
+  secretName: k8s-multi-com
+  issuerRef: 
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  # define what domain name this certificate is good for 
+  commonName: k8s-multi.com
+  dnsNames: 
+    - k8s-multi.com
+    - www.k8s-multi.com
+  acme:
+    config: 
+      - http01:
+          ingressClass: nginx 
+        domains:
+          - k8s-multi.com
+          - www.k8s-multi.com
